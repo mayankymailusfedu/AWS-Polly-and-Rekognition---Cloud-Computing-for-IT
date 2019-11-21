@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--
+Template Name: Epigosha
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html>
+<head>
+<title>AWS Polly and Rekognition</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body id="top">
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row1">
+  <header id="header" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <div id="logo" class="fl_left">
+      <h1><a href="../index.html">AWS Polly and Rekognition</a></h1>
+    </div>
+    <nav id="mainav" class="fl_right">
+      <ul class="clear">
+        <li class="active"><a href="../index.html">Home</a></li>
+        <li><a class="drop" href="#">Tutorial</a>
+          <ul>
+            <li ><a href="aws-polly.html">AWS Polly</a></li>
+            <li class="active"><a href="labels.html">Labels</a></li>
+            <li><a href="detect-text.html">Detect Text</a></li>
+            <li><a href="face-collection.html">Face Collection</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- ################################################################################################ -->
+  </header>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="one_half first clear btmspace-80" style="width: 100%;">
+      <h3 class="font-x2">AWS Rekognition and Label</h3>
+        <p class="font-x1">In this module we will see how to work with AWS Rekognition.</p>
+        <p class="font-x1">We will be using Boto3 for working with AWS Rekognition. Boto3 provides variety of functions that makes interacting with AWS simple. We will be covering the following functions:</p>
+        <p class="font-x1">•	detect_labels</p>
+        <p class="font-x1">•	recognize_celebrities</p>
+        <p class="font-x1">•	detect_faces</p>
+        <p class="font-x1">•	compare_faces</p>
+        <p class="font-x1">•	detect_text</p>
+        <p class="font-x1">•	create_collection</p>
+        <p class="font-x1">•	index_faces</p>
+        <p class="font-x1">•	search_faces_by_image</p>
+        <p class="font-x1">Try exploring other functions provided by Boto3. One can find all the functions provided by Boto3 on their documentation page, the link of the page is given on the home page.</p>
+        <p class="font-x1">We will discuss the first 4 function briefly, as they have already been explained to us by the professor, in this module. Let’s get started with detect_labels. This function outputs all the labels that an image contains. In other words, it will describe the image in words. For example, there is an image of nature, detect_labels will detect all the components in the image like clouds, river, nature, stone, sand, trees, forest. This methods accepts two parameters, image bytes and confidence level (optional). Confidence level is the AWS Rekognition percentage of surety that the component is what it has described as. We can also provide an image from S3 Bucket.</p>
+        <p class="font-x1">To convert image into bytes we will use the image_helper.py program given by Professor. The program just identify whether the image is located on local machine or on internet (url). Then accordingly use content function or read function to convert the image into byte. “detect_labels” function returns a Label List but we are only interested in ‘Name’ filed of the list. We can perform a for loop on our response[‘Label’] and inside the loop we can do, item[‘Name’] (item is the name of the variable declared in for loop and used to traverse the Label). Now we have all the names.  We can use the “join” function to join the list elements. In our case it will look like:</p>
+        <p class="font-x1">Str=', '.join(name_label)</p>
+        <p class="font-x1">Pass this “STR” string in the text_to_speech(Str,’Amy’).</p>
+        <p class="font-x1">Next is “recognize_celebrities”, this function detects the faces from the image and match them with the AWS Rekognition Celebs database. It has one compulsory parameter, i.e., image bytes. This function returns List of response[‘CelebrityFaces’]. Same as above, we only require the ‘Name’:</p>
+        <p class="font-x1">for face in rekresp['CelebrityFaces']:</p>
+        <p class="font-x1">  result.append(face['Name'])</p>
+        <p class="font-x1">Again perform the join and pass it to the text_to_speech() function:</p>
+        <p class="font-x1">Str=', '.join(name_celeb)</p>
+        <p class="font-x1">text_to_speech(Str,’Amy’)</p>
+        <p class="font-x1">Next we have detect_faces() function. It describes how a face looks and also outputs it position. We will use AWS Polly to describe image via speech  and outputs for drawing the box around the face. Bound Box attribute of the result contains the positions. The emotion attribute describes the state of the person like calm, confuse. detect_faces() describe every details of the face: age, gender, sunglasses, Beard. But we modify the output to our requirements and describe number of faces, gender, age, emotion. The code will look like:</p>
+        <p class="font-x1">client = boto3.client('rekognition')</p>
+        <p class="font-x1">rekresp = client.detect_faces(Image={'Bytes': imgbytes},
+                              Attributes=['ALL'])</p>
+        <p class="font-x1">numfaces = len(rekresp['FaceDetails'])</p>
+        <p class="font-x1">if numfaces == 1:</p>
+        <p class="font-x1">    &nbsp;&nbsp;found = 'Found ' + (str)(numfaces) + ' face : '</p>
+        <p class="font-x1">else:</p>
+        <p class="font-x1">    &nbsp;&nbsp;found = 'Found ' + (str)(numfaces) + ' faces : '</p>
+        <p class="font-x1">for facedeets in rekresp['FaceDetails']:</p>
+        <p class="font-x1">	&nbsp;&nbsp;fmtstr = '{gender} age {lowage}-{highage},'</p>
+        <p class="font-x1">	&nbsp;&nbsp;if facedeets['Mustache']['Value'] and facedeets['Beard']['Value']:</p>
+        <p class="font-x1"> &nbsp;&nbsp;&nbsp;&nbsp;   fmtstr += ' with beard and mustache,'</p>
+        <p class="font-x1"> &nbsp;&nbsp;elif facedeets['Mustache']['Value']:</p>
+        <p class="font-x1"> &nbsp;&nbsp;&nbsp;&nbsp;   fmtstr += ' with mustache,'</p>
+        <p class="font-x1"> &nbsp;&nbsp;elif facedeets['Beard']['Value']:</p>
+        <p class="font-x1"> &nbsp;&nbsp;&nbsp;&nbsp;   fmtstr += ' with beard,'</p>
+        <p class="font-x1"> &nbsp;&nbsp;if facedeets['Sunglasses']['Value']:</p>
+        <p class="font-x1"> &nbsp;&nbsp;&nbsp;&nbsp;   fmtstr += ' wearing sunglasses,'</p>
+        <p class="font-x1"> &nbsp;&nbsp;elif facedeets['Eyeglasses']['Value']:</p>
+        <p class="font-x1"> &nbsp;&nbsp;&nbsp;&nbsp;   fmtstr += ' wearing glasses,'</p>
+        <p class="font-x1"> &nbsp;&nbsp;fmtstr += ' looks {emotion}'</p>
+        <p class="font-x1"> &nbsp;&nbsp;result1=(fmtstr.format(gender=facedeets['Gender']['Value'],lowage=facedeets['AgeRange']['Low'],highage=facedeets['AgeRange']['High'],emotion=facedeets['Emotions'][0]['Type'].lower()    )</p>
+        <p class="font-x1"> &nbsp;&nbsp;   )</p>
+        <p class="font-x1">)</p>
+        <p class="font-x1">result=found+result1+'. '</p>
+        <p class="font-x1">Next is “compare_faces”.It takes three parameters: Similarity Threshold, source image bytes, and target image bytes. The function will look like:</p>
+        <p class="font-x1">client.compare_faces(SimilarityThreshold=70,
+                                SourceImage={'Bytes': imgsourcebytes},
+                                TargetImage={'Bytes': imgtargetbytes})
+</p>
+        <p class="font-x1">From this we might be getting an idea that for comparing faces that are stored locally, we would be using the compare_faces function and output the result. The answer is maybe or maybe not.</p>
+        <p class="font-x1">Logically, it is possible. Like take every stored face and compare it to every face in the provided image. It seems lengthy. Now let’s see other details, how will you provide the stored image? How will you store the image? We cannot just save the image file locally and provide the path of the folder. There is no function that takes input as folder or can traverse a folder.</p>
+        <p class="font-x1">Well the answer to the above question is No. Instead we have concept of Collection. And we will discuss this in the last module.</p>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <p class="fl_left">U94319493 - Mayank Yadav - Cloud Computing for IT - Grad Project - Phil Ventura</p>
+    <p class="fl_right">University of South Florida, Tampa</p>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>

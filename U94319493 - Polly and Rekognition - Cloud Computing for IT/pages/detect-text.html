@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+Template Name: Epigosha
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html>
+<head>
+<title>AWS Polly and Rekognition</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body id="top">
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row1">
+  <header id="header" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <div id="logo" class="fl_left">
+      <h1><a href="../index.html">AWS Polly and Rekognition</a></h1>
+    </div>
+    <nav id="mainav" class="fl_right">
+      <ul class="clear">
+        <li class="active"><a href="../index.html">Home</a></li>
+        <li><a class="drop" href="#">Tutorial</a>
+          <ul>
+            <li ><a href="aws-polly.html">AWS Polly</a></li>
+            <li><a href="labels.html">Labels</a></li>
+            <li class="active"><a href="detect-text.html">Detect Text</a></li>
+            <li><a href="face-collection.html">Face Collection</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- ################################################################################################ -->
+  </header>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="one_half first clear btmspace-80" style="width: 100%;">
+      <h3 class="font-x2">Detect Text</h3>
+        <p class="font-x1">In this module we will learn how to detect text from an image?</p>
+        <p class="font-x1">The detect_text() function, as the name suggest detects text from an image. It can also detect hidden text that are not visible to human eye. This function accepts a parameter, the image byte.</p>
+        <p class="font-x1">response = client.detect_text(Image={'Bytes': imgbytes})</p>
+        <p class="font-x1">pprint(response)</p>
+        <p class="font-x1">As you might be able to observe in the Boto3 documentation that there is a function detect_text() to perform this task, but when you run this function, you might be getting an error saying Rekonigtion has no method as detect_text().</p>
+        <p class="font-x1">The reason why we are getting this error, is because this function was introduced in the Boto3’s newer version, 1.4.8, released on 22nd November, 2017 and we are working on 1.4.7.</p>
+        <p class="font-x1">To update your version of boto3, in PyCharm hit Ctrl-Alt-S to bring up the Project settings.  Go to the Project and click on Project Interpreter.  There you will see a list of all the modules/packages.  Find boto3 in the list, and click on it.  Then over to the right you will see a plus, a minus, and an upward arrow.  Click the upward arrow (see screenshot).</p>
+        <img src="../images/demo/boto3%20upgrade.png" alt="boto3 upgrade screenshot"/>
+        <p class="font-x1">Now again try the detect_text() function. 	We only require text therefore we require “DetectedText” field of “TextDetections”. Let’s store the result in a string:</p>
+        <p class="font-x1">imgString=""</p>
+        <p class="font-x1">for img in rekresp['TextDetections']:</p>
+        <p class="font-x1">&nbsp;&nbsp;imgString=imgString+img['DetectedText']+" "</p>
+        <p class="font-x1">As we can observe that the text is repeated two times but we require the text as once. Well, there is a work around this, divide the string in two parts:</p>
+        <p class="font-x1">half, rem = divmod(len(imgString), 2)</p>
+        <p class="font-x1">frontA = imgString[:half + rem]</p>
+        <p class="font-x1">backA = imgString[half + rem:]</p>
+        <p class="font-x1">Now print only the “frontA”. Done</p>
+        <p class="font-x1">Sample Image to text this:</p>
+        <img src="http://docs.aws.amazon.com/rekognition/latest/dg/images/text.png" alt="textImage"/>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <p class="fl_left">U94319493 - Mayank Yadav - Cloud Computing for IT - Grad Project - Phil Ventura</p>
+    <p class="fl_right">University of South Florida, Tampa</p>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>

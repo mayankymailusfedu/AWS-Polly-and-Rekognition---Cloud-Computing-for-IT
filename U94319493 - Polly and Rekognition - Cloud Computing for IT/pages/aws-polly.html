@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+Template Name: Epigosha
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html>
+<head>
+<title>AWS Polly and Rekognition</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body id="top">
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row1">
+  <header id="header" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <div id="logo" class="fl_left">
+      <h1><a href="../index.html">AWS Polly and Rekognition</a></h1>
+    </div>
+    <nav id="mainav" class="fl_right">
+      <ul class="clear">
+        <li class="active"><a href="../index.html">Home</a></li>
+        <li><a class="drop" href="#">Tutorial</a>
+          <ul>
+            <li class="active"><a href="aws-polly.html">AWS Polly</a></li>
+            <li><a href="labels.html">Labels</a></li>
+            <li><a href="detect-text.html">Detect Text</a></li>
+            <li><a href="face-collection.html">Face Collection</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- ################################################################################################ -->
+  </header>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="one_half first clear btmspace-80" style="width: 100%;">
+      <h3 class="font-x2">AWS Polly</h3>
+      <p class="font-x1">At the end of this tutorial, we will be able to describe the image, display the description on the image, detect any text written on the image, recognize number of individual present in the image, recognize the celebrity, recognize the people who are not celebrity (basically providing our own database to refer for matching the faces) and also draw a rectangle around the identified face and lastly use AWS Polly to speak out every above detail.</p>
+        <p class="font-x1">Yup, the aim looks big, but AWS Polly will make it look great.</p>
+        <p class="font-x1">In this module we will see how to work with AWS Polly</p>
+        <p class="font-x1">Open PyCharm -> New Project -> Pure Python -> Name it: SayIt -> Create.</p>
+        <p class="font-x1">Now, let’s install the packages:</p>
+        <p class="font-x1">Press Ctrl+Alt+S -> Project: SayIt -> Project Interpreter -> Click on the Setting Icon -> Create VirtualEnv -> Location: Locate your SayIt Project and save the location inside the Project; Name: Chalice -> Check the Inherit global site-packages -> OK.</p>
+        <p class="font-x1">Then PyCharm will create the appropriate environment for us. After that, install the packages by Clikcing on the “+” icon. Install basic packages like: boto3, awscli, requests, and chalice. What does Chalice do? It sets up the environment and permission required for the program to work.</p>
+        <p class="font-x1">Now, go to Terminal (Located at the bottom of PyCharm). Write following commands:</p>
+        <p class="font-x1">•	cd..</p>
+        <p class="font-x1">•	chalice new-project SayItApp</p>
+        <p class="font-x1">Open your SayIt project in File Explorer. Press back to go to the previous folder. There you will see your SayItApp folder. Open it, it will contain a chalice folder and some files. Copy all the files to SayIt project location. And do the following changes:</p>
+        <p class="font-x1">•	chalice -> config.json - “app-name”:”SayIt”</p>
+        <p class="font-x1">•	app.py -> app_name:’SayIt'</p>
+        <p class="font-x1">Go to Terminal -> Type “chalice local” -> Click the check boxes that shows up -> Allow access.</p>
+        <p class="font-x1">Now we a localhost running on localhost: 8000. Copy that and paste it in your browser. And it will display the {‘hello’:’world’}.</p>
+        <p class="font-x1">Copy the following files in your folder:</p>
+        <p class="font-x1">•	<a href="app.py.html" target="_blank"> app.py </a></p>
+        <p class="font-x1">•	<a href="get_voices.py.html" target="_blank"> get_voices.py </a></p>
+        <p class="font-x1">•	<a href="index_html.html" target="_blank"> index.html </a> (To save this file, right click on the link and click on save link as)</p>
+        <p class="font-x1">•	<a href="style.css.html" target="_blank"> style.css </a></p>
+        <p class="font-x1">•	<a href="apptext.py.html" target="_blank"> apptext.py</a></p>
+        <p class="font-x1">Open Python Console (Located at the bottom of PyCharm), and write the following code:</p>
+        <p class="font-x1">•	from app import *</p>
+        <p class="font-x1">•	from apptext import *</p>
+        <p class="font-x1">•	text_to_speech(‘Hello’, ’Amy’)</p>
+        <p class="font-x1">“text_to_speech” is a function in our apptext.py file. This function uses AWS Polly and spells out the given text using the given voice. There are more than 14 voices present in AWS Polly. We are opting ‘Amy’ for our project. If you want to know what other voices AWS Polly provides, we can Google “AWS polly voices” and open the “Available Voices – Amazon Polly – AWS Documentation” link.</p>
+        <p class="font-x1">We can also save these audio file on our S3 Bucket. To explore more about S3 option, watch the recommended YouTube videos. </p>
+        <p class="font-x1">Write a simple python calling client and call the function text_to_speech() and pass it the required values. Don’t forget to import the apptext.</p>
+        <p class="font-x1">Now explore more voices provided by AWS Polly and try different text.</p>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <p class="fl_left">U94319493 - Mayank Yadav - Cloud Computing for IT - Grad Project - Phil Ventura</p>
+    <p class="fl_right">University of South Florida, Tampa</p>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>

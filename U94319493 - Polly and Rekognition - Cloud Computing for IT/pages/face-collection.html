@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<!--
+Template Name: Epigosha
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html>
+<head>
+<title>AWS Polly and Rekognition</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body id="top">
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row1">
+  <header id="header" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <div id="logo" class="fl_left">
+      <h1><a href="../index.html">AWS Polly and Rekognition</a></h1>
+    </div>
+    <nav id="mainav" class="fl_right">
+      <ul class="clear">
+        <li class="active"><a href="../index.html">Home</a></li>
+        <li><a class="drop" href="#">Tutorial</a>
+          <ul>
+            <li ><a href="aws-polly.html">AWS Polly</a></li>
+            <li><a href="labels.html">Labels</a></li>
+            <li><a href="detect-text.html">Detect Text</a></li>
+            <li class="active"><a href="face-collection.html">Face Collection</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <!-- ################################################################################################ -->
+  </header>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="one_half first clear btmspace-80" style="width: 100%;">
+      <h3 class="font-x2">Face Collection</h3>
+        <p class="font-x1">In this module we will learn how to make AWS Rekognition identify our self.</p>
+        <p class="font-x1">As we discussed in the previous module, that we will be using Collection. Let’s start with creating a collection. To create a collection for storing images, that function provided by Boto3 is create_collection():</p>
+        <p class="font-x1">&nbsp;&nbsp;rekresp = client.create_collection(CollectionId='myCollection',)</p>
+        <p class="font-x1">&nbsp;&nbsp;pprint(rekresp)</p>
+        <p class="font-x1">We are using “myCollection” as our collection name, but we can also give it some other name. It creates a collection in an AWS Region. The above program output will look like:</p>
+        <p class="font-x1">{'CollectionArn': 'aws:rekognition:us-east-1:050122124972:collection/myCollection',</p>
+        <p class="font-x1">'FaceModelVersion': '2.0',</p>
+        <p class="font-x1">'ResponseMetadata': {'HTTPHeaders': {'connection': 'keep-alive',
+                                       'content-length': '124',
+                                       'content-type': 'application/x-amz-json-1.1',
+                                       'date': 'Sat, 25 Nov 2017 00:43:12 GMT',
+                                       'x-amzn-requestid': '9d729749-d179-11e7-a131-8fd57d6e1f6f'},
+</p>
+        <p class="font-x1">'HTTPStatusCode': 200,
+                       'RequestId': '9d729749-d179-11e7-a131-8fd57d6e1f6f',
+                       'RetryAttempts': 0},
+</p>
+        <p class="font-x1">'StatusCode': 200}</p>
+        <p class="font-x1">Now that we have a collection, let’s add faces to the collection. “index_faces” function does that for us. We would be providing four parameters for this function: Collection name, Image byte, Name to the image, Attributes to be stored.</p>
+        <p class="font-x1">In coding the parameters would like:</p>
+        <p class="font-x1">rekresp = client.index_faces(CollectionId='myCollection',Image={'Bytes':</p>
+        <p class="font-x1">imgbytes},ExternalImageId='Name_OF_Person',
+      DetectionAttributes=['ALL'])
+</p>
+        <p class="font-x1">And we are done. We have stored the image, now what’s left is to compare each face with the input image and check if they match or not. Again compare_faces is not the answer. Boto3 provides another method to perform this task. But remember, if it gets face match for one face, it will return with that value. The function will look like:</p>
+        <p class="font-x1">response = client.search_faces_by_image(CollectionId='myCollection', Image={'Bytes': imgbytes},FaceMatchThreshold=70)</p>
+        <p class="font-x1"># return response</p>
+        <p class="font-x1">str=""</p>
+        <p class="font-x1">if len(response['FaceMatches'])==0 :</p>
+        <p class="font-x1">&nbsp;&nbsp;    str=str</p>
+        <p class="font-x1">else:</p>
+        <p class="font-x1"> &nbsp;&nbsp;   for r in response['FaceMatches']:</p>
+        <p class="font-x1"> &nbsp;&nbsp;&nbsp;&nbsp;        str=str+r['Face']['ExternalImageId']+" "</p>
+        <p class="font-x1">return str</p>
+        <p class="font-x1">This function also return the Bound Box of the image. Therefore we can draw the rectangle using this value.</p>
+        <p class="font-x1">Now let’s see how this will look like when implemented together:</p>
+        <p class="font-x1">#Getting the labels for the given image</p>   
+        <p class="font-x1">name=get_labels(img,confidence)</p>
+        <p class="font-x1">for label in name:</p>
+        <p class="font-x1">&nbsp;&nbsp;    nametext.append(label['Name'])</p>
+        <p class="font-x1">text=', '.join(nametext) #text is the value that we would be passing for printing the labels on the image.</p>
+        <p class="font-x1">#Let’s write code for wishing/ greeting</p>
+        <p class="font-x1">hour=datetime.datetime.now().time().hour</p>
+        <p class="font-x1">if hour<=10:</p>
+        <p class="font-x1">&nbsp;&nbsp;texttpspeech = "Good Morning. "</p>
+        <p class="font-x1">elif hour>10 and hour<=16:</p>
+        <p class="font-x1">&nbsp;&nbsp;texttpspeech = "Good Afternoon. "</p>
+        <p class="font-x1">else:</p>
+        <p class="font-x1">&nbsp;&nbsp;texttpspeech = "Good Evening. "</p>
+        <p class="font-x1">#texttsspeech is the variable that will be storing all the content to be giving to the AWS POLLLY for speaking</p>
+        <p class="font-x1"># append the labels to the AWS POLLY variable</p>
+        <p class="font-x1">texttpspeech=texttpspeech+"The image contains : "+text+". "</p>
+        <p class="font-x1">#Calling the function to check whether the image contains text or not</p>
+        <p class="font-x1">text_on_image = text_image.textImage(imgbytes)</p>
+        <p class="font-x1">if text_on_image == "" or text_on_image == " ":</p>
+        <p class="font-x1">&nbsp;&nbsp;texttpspeech = texttpspeech</p>
+        <p class="font-x1">else:</p>
+        <p class="font-x1">&nbsp;&nbsp;texttpspeech = texttpspeech + " The text written on image is " + text_on_image + ". "</p>
+        <p class="font-x1">#creating a list to check whether the image contains any humans so that we can scan for face match with celebrity or with myCollection collection</p>
+        <p class="font-x1">myList = ['Human','People','Person','Female','Male','Girl','Boy','Woman','Man','Face','Laughing','Smile','Blonde','Crowd']</p>
+        <p class="font-x1">flag = 0</p>
+        <p class="font-x1">celebrity = []</p>
+        <p class="font-x1">for i in myList:</p>
+        <p class="font-x1">&nbsp;&nbsp;     # If not a celebrity then search in myCollection collection</p>
+        <p class="font-x1">&nbsp;&nbsp;     if flag == 0 and texttpspeech.__contains__(i):</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;       flag=1</p>
+        <p class="font-x1">&nbsp;&nbsp;&nbsp;&nbsp;        #pprint("Text found "+i)</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;       texttpspeech = texttpspeech + (str)(face_detect.describe_faces(imgbytes))</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;       celebrity = celebs.celeb(imgbytes)</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;       if not celebrity:</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;           foundFaces=searchFacesInCollection.search_faces(imgbytes)</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;           if foundFaces=="":</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               texttpspeech=texttpspeech</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;           else:</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;               foundFaces=foundFaces.replace("_"," ")</p>
+        <p class="font-x1">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;               texttpspeech = texttpspeech + "I can recognize the personal as "+ foundFaces+". "</p>
+        <p class="font-x1">&nbsp;&nbsp;&nbsp;&nbsp;                face_detect_draw.acceptImagebytes(imgbytes)</p>
+        <p class="font-x1">&nbsp;&nbsp;        else:</p>
+        <p class="font-x1">&nbsp;&nbsp;&nbsp;&nbsp;            texttpspeech = texttpspeech + "I can recognize the personal as : " + ', '.join(celebrity) + '. '</p>
+        <p class="font-x1">&nbsp;&nbsp;&nbsp;&nbsp;            text = ', '.join(celebrity)</p>
+        <p class="font-x1">&nbsp;&nbsp;        break</p>
+        <p class="font-x1">#Final give the whole text to AWS Polly to speck.</p>
+        <p class="font-x1">apptext.text_to_speech(texttpspeech,'Amy')</p>
+        <p class="font-x1"><b>Outputs Screenshot</b></p>
+        <p class="font-x1">Input Image <img src="../images/demo/IMG_20171108_124915.jpg" alt="Input Image" /></p>
+        <p class="font-x1">Output Image with Rectangle Box <img src="../images/demo/output-box1.PNG" alt="Output Box" /></p>
+        <p class="font-x1">Output Image with Text written on Image <img src="../images/demo/output-text1.PNG" alt="Output Text" /></p>
+        <p class="font-x1">Text spoken by AWS POLLY: "Good Evening. The image contains : Human, People, Person, Head, Face, Ancient Egypt.  The text written on image is NA 3X9 WVMM . Found 1 face : Male age 20-38, with beard and mustache, looks happy. I can recognize the personal as Mayank Yadav ."</p>
+        <p class="font-x1">Input Image <img src="https://blog.njsnet.co/content/images/2017/02/trumprecognition.png" alt="Input Image"></p>
+        <p class="font-x1">Output Image with Text written on Image <img src="../images/demo/output-text2.PNG" alt="Output Text" /></p>
+        <p class="font-x1">Text spoken by AWS POLLY: "Good Evening. The image contains : Human, People, Person, Clothing, Coat, Overcoat, Suit, Blonde, Female, Girl, Woman, Apparel, Runway, Costume . Found 7 faces : Female age 26-43, looks happy. I can recognize the personal as : Tiffany Trump, Gerry Leonard, Donald Trump Jr., Eric Trump, Ivanka Trump, Melania Trump."</p>
+        <p class="font-x1">We can also observe that if the porgram identifies the celebrity, it prints their names on the image instead of labels. We can also do the same for the faces stored in the collection.</p>
+        <p class="font-x1">Input Image <img src="../images/demo/293af07.jpg" alt="Input Image" /></p>
+        <p class="font-x1">Output Image with Rectangle Box <img src="../images/demo/output-box3.PNG" alt="Output Box" /></p>
+        <p class="font-x1">Output Image with Text written on Image <img src="../images/demo/output-text3.PNG" alt="Output Text" /></p>
+        <p class="font-x1">Text spoken by AWS POLLY: "Good Evening. The image contains : Human, People, Person, Face, Portrait, Head. Found 1 face : Male age 45-66, looks happy. I can recognize the personal as Phil Ventura ."</p>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <p class="fl_left">U94319493 - Mayank Yadav - Cloud Computing for IT - Grad Project - Phil Ventura</p>
+    <p class="fl_right">University of South Florida, Tampa</p>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>

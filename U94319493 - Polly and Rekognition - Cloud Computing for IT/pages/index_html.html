@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 
+  Modified from
+     https://aws.amazon.com/blogs/ai/build-your-own-text-to-speech-applications-with-amazon-polly/,
+     last access 10.29/2917
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>LambdaPolyGateway</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="content">
+        Voice:
+        <select id="voiceSelected">
+            <option value="Joanna">Joanna US English</option>
+            <option value="Salli">Salli US English</option>
+            <option value="Matthew">Matthew US English</option>
+            <option value="Kimberly">Kimberly US English</option>
+            <option value="Kendra">Kendra US English</option>
+            <option value="Justin">Justin US English</option>
+            <option value="Joey">Joey US English</option>
+            <option value="Ivy">Ivy US English</option>
+            <option value="Russell">Russell Australian English</option>
+            <option value="Nicole">Nicole Australian English</option>
+            <option value="Emma">Emma British English</option>
+            <option value="Brian">Brian British English</option>
+            <option value="Amy">Amy British English</option>
+            <option value="Vitoria">Vitoria Brazilian Portuguese</option>
+            <option value="Ricardo">Ricardo Brazilian Portuguese</option>
+            <option value="Chantal">Chantal Canadian French</option>
+            <option value="Enrique">Enrique Castilian Spanish</option>
+            <option value="Conchita">Conchita Castilian Spanish</option>
+            <option value="Naja">Naja Danish</option>
+            <option value="Mads">Mads Danish</option>
+            <option value="Ruben">Ruben Dutch</option>
+            <option value="Lotte">Lotte Dutch</option>
+            <option value="Mathieu">Mathieu French</option>
+            <option value="Celine">Celine French</option>
+            <option value="Vicki">Vicki German</option>
+            <option value="Marlene">Marlene German</option>
+            <option value="Hans">Hans German</option>
+            <option value="Karl">Karl Icelandic</option>
+            <option value="Dora">Dora Icelandic</option>
+            <option value="Raveena">Raveena Indian English</option>
+            <option value="Giorgio">Giorgio Italian</option>
+            <option value="Carla">Carla Italian</option>
+            <option value="Takumi">Takumi Japanese</option>
+            <option value="Mizuki">Mizuki Japanese</option>
+            <option value="Liv">Liv Norwegian</option>
+            <option value="Maja">Maja Polish</option>
+            <option value="Jan">Jan Polish</option>
+            <option value="Ewa">Ewa Polish</option>
+            <option value="Jacek">Jacek Polish</option>
+            <option value="Ines">Ines Portuguese</option>
+            <option value="Cristiano">Cristiano Portuguese</option>
+            <option value="Carmen">Carmen Romanian</option>
+            <option value="Tatyana">Tatyana Russian</option>
+            <option value="Maxim">Maxim Russian</option>
+            <option value="Astrid">Astrid Swedish</option>
+            <option value="Filiz">Filiz Turkish</option>
+            <option value="Penelope">Penelope US Spanish</option>
+            <option value="Miguel">Miguel US Spanish</option>
+            <option value="Gwyneth">Gwyneth Welsh</option>
+            <option value="Geraint">Geraint Welsh English</option>
+        </select>
+
+        <input type="submit" value="Say it!" id="sayButton" class="buttons">
+
+        <!--        <span id="postIDreturned"></span>-->
+        <br>
+        <br>
+
+        <textarea id="postText"></textarea>
+        <span id="charCounter">Characters: 0</span>
+
+        <br>
+        <br>
+        <table id="posts">
+            <colgroup>
+                <col>
+                    <col style="width:45%">
+                        <col style="width:30%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th>Voice</th>
+                    <th>Text</th>
+                    <th>Player</th>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+        <script>
+            const API_ENDPOINT = "https://hsqd7z1ss7.execute-api.us-east-1.amazonaws.com/api/sayit"
+                //            const API_ENDPOINT = "http://localhost:8000/sayit"
+
+            document.getElementById("sayButton").onclick = function () {
+
+                var inputData = {
+                    "voice": $('#voiceSelected option:selected').val(),
+                    "text": $('#postText').val()
+                };
+
+                $.ajax({
+                    url: API_ENDPOINT,
+                    type: 'GET',
+                    data: inputData,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        console.log(response);
+                        const player = "<audio controls><source src='" + response['url'] + "' type='audio/mpeg'></audio>"
+                        $("#posts").append("<tr> \
+                    <td>" + response['voice'] + "</td> \
+                    <td>" + response['text'] + "</td> \
+                    <td>" + player + "</td> \
+                    </tr>");
+
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+            }
+
+
+            document.getElementById("postText").onkeyup = function () {
+                var length = $(postText).val().length;
+                document.getElementById("charCounter").textContent = "Characters: " + length;
+            }
+        </script>
+</body>
+
+</html>
